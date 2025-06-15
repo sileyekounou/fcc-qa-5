@@ -6,11 +6,10 @@ const server = require('../server');
 chai.use(chaiHttp);
 
 suite('Functional Tests', () => {
-
-  // Puzzles de test
+  
   const validPuzzle = '1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.';
   const solvedPuzzle = '135762984946381257728459613694517832812936745357824196473298561581673429269145378';
-  const invalidPuzzle = '115..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.'; // Deux 1 dans la première ligne
+  const invalidPuzzle = '115..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.';
   const unsolvablePuzzle = '5..91372.3...8.5.9.9.25..8.68.47.23...95..46.7.4.....5.2.......4..8916..85.72...3';
 
   suite('POST /api/check', () => {
@@ -77,18 +76,17 @@ suite('Functional Tests', () => {
     });
 
     test('Check a puzzle placement with all placement conflicts: POST request to /api/check', (done) => {
-      // Créer un puzzle avec exactement 3 '1' placés stratégiquement
       let puzzle = '.'.repeat(81);
-      puzzle = puzzle.substring(0, 8) + '1' + puzzle.substring(9);    // A9 (row 0, col 8)
-      puzzle = puzzle.substring(0, 20) + '1' + puzzle.substring(21);  // C3 (row 2, col 2) 
-      puzzle = puzzle.substring(0, 73) + '1' + puzzle.substring(74);  // I2 (row 8, col 1)
+      puzzle = puzzle.substring(0, 8) + '1' + puzzle.substring(9);
+      puzzle = puzzle.substring(0, 73) + '1' + puzzle.substring(74);
+      puzzle = puzzle.substring(0, 20) + '1' + puzzle.substring(21);
       
       chai
         .request(server)
         .post('/api/check')
         .send({
           puzzle: puzzle,
-          coordinate: 'A2', // Position (0,1) - va créer conflits avec A9, I2, et C3
+          coordinate: 'A2',
           value: '1'
         })
         .end((err, res) => {
@@ -112,13 +110,12 @@ suite('Functional Tests', () => {
         .send({
           puzzle: validPuzzle,
           coordinate: 'A2'
-          // value manquant
         })
         .end((err, res) => {
           assert.equal(res.status, 200);
           assert.isObject(res.body);
           assert.property(res.body, 'error');
-          assert.equal(res.body.error, 'Required field missing');
+          assert.equal(res.body.error, 'Required field(s) missing');
           done();
         });
     });
@@ -240,7 +237,6 @@ suite('Functional Tests', () => {
         .request(server)
         .post('/api/solve')
         .send({
-          // puzzle manquant
         })
         .end((err, res) => {
           assert.equal(res.status, 200);
@@ -370,7 +366,6 @@ suite('Functional Tests', () => {
           assert.equal(res.status, 200);
           assert.isObject(res.body);
           assert.property(res.body, 'valid');
-          // Le résultat peut être true ou false selon le puzzle, l'important est qu'il ne crash pas
           done();
         });
     });
@@ -400,13 +395,12 @@ suite('Functional Tests', () => {
         .send({
           puzzle: validPuzzle,
           coordinate: 'A2',
-          value: 3  // nombre au lieu de string
+          value: 3 
         })
         .end((err, res) => {
           assert.equal(res.status, 200);
           assert.isObject(res.body);
           assert.property(res.body, 'valid');
-          // Doit fonctionner car parseInt(3) = 3
           done();
         });
     });

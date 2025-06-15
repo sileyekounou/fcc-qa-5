@@ -6,10 +6,9 @@ let solver;
 
 suite('Unit Tests', () => {
   
-  // Puzzles de test
   const validPuzzle = '1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.';
   const solvedPuzzle = '135762984946381257728459613694517832812936745357824196473298561581673429269145378';
-  const invalidPuzzle = '115..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.'; // Deux 1 dans la première ligne
+  const invalidPuzzle = '115..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.';
   
   suiteSetup(() => {
     solver = new Solver();
@@ -37,7 +36,7 @@ suite('Unit Tests', () => {
     });
 
     test('Logic handles an invalid puzzle string (impossible to solve)', () => {
-      const result = solver.validate(invalidPuzzle);
+      const result = solver.validateComplete(invalidPuzzle);
       assert.isFalse(result.valid);
       assert.equal(result.error, 'Puzzle cannot be solved');
     });
@@ -120,11 +119,9 @@ suite('Unit Tests', () => {
       const result = solver.solve(validPuzzle);
       assert.property(result, 'solution');
       
-      // Vérifier que la solution est valide
       const validation = solver.validate(result.solution);
       assert.isTrue(validation.valid);
       
-      // Vérifier que tous les caractères sont des chiffres
       assert.isTrue(/^[1-9]{81}$/.test(result.solution));
     });
 
@@ -180,13 +177,13 @@ suite('Unit Tests', () => {
     });
 
     test('convertCoordinate handles invalid coordinates', () => {
-      assert.isNull(solver.convertCoordinate('J1')); // J is out of range
-      assert.isNull(solver.convertCoordinate('A0')); // 0 is out of range
-      assert.isNull(solver.convertCoordinate('A10')); // 10 is out of range
-      assert.isNull(solver.convertCoordinate('Z5')); // Z is out of range
-      assert.isNull(solver.convertCoordinate('A')); // Missing column
-      assert.isNull(solver.convertCoordinate('1')); // Missing row
-      assert.isNull(solver.convertCoordinate('')); // Empty string
+      assert.isNull(solver.convertCoordinate('J1'));
+      assert.isNull(solver.convertCoordinate('A0'));
+      assert.isNull(solver.convertCoordinate('A10'));
+      assert.isNull(solver.convertCoordinate('Z5'));
+      assert.isNull(solver.convertCoordinate('A'));
+      assert.isNull(solver.convertCoordinate('1'));
+      assert.isNull(solver.convertCoordinate(''));
     });
 
     test('checkValue handles valid placements', () => {

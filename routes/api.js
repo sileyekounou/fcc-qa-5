@@ -10,16 +10,8 @@ module.exports = function (app) {
     .post((req, res) => {
       const { puzzle, coordinate, value } = req.body;
       
-      if (!puzzle) {
-        return res.json({ error: 'Required field missing' });
-      }
-
-      if (!coordinate) {
-        return res.json({ error: 'Required field missing' });
-      }
-
-      if (!value) {
-        return res.json({ error: 'Required field missing' });
+      if (!puzzle || !coordinate || !value) {
+        return res.json({ error: 'Required field(s) missing' });
       }
       
       const validation = solver.validate(puzzle);

@@ -10,6 +10,15 @@ class SudokuSolver {
       return { valid: false, error: 'Invalid characters in puzzle' };
     }
     
+    return { valid: true };
+  }
+  
+  validateComplete(puzzleString) {
+    const basicValidation = this.validate(puzzleString);
+    if (!basicValidation.valid) {
+      return basicValidation;
+    }
+    
     for (let i = 0; i < 81; i++) {
       const char = puzzleString[i];
       if (char !== '.') {
@@ -92,7 +101,7 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
-    const validation = this.validate(puzzleString);
+    const validation = this.validateComplete(puzzleString);
     if (!validation.valid) {
       return { error: validation.error };
     }
